@@ -1,11 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import { login } from '../actions';
 
 class Login extends React.Component {
   constructor(props) {
     super(props);
-    this.state= {
+    this.state = {
       isDisabled: true,
       email: '',
       password: '',
@@ -16,7 +17,6 @@ class Login extends React.Component {
     const { name, value } = target;
     this.setState({ [name]: value }, this.loginCheck);
   };
-
 
   // https://www.horadecodar.com.br/2020/09/13/como-validar-email-com-javascript/
   validateEmail = (email) => {
@@ -76,6 +76,11 @@ class Login extends React.Component {
     );
   }
 }
+
+Login.propTypes = {
+  user: PropTypes.func,
+  history: PropTypes.object,
+}.isRequired;
 
 const mapDispatchToProps = (dispatch) => ({
   user: (state) => dispatch(login(state)),
