@@ -1,21 +1,20 @@
-import { WALLET } from '../actions';
+import { CURRENCY } from '../actions';
 
 const INITIAL_STATE = {
   currencies: [],
   expenses: [],
 };
 
-function walletReducer(state = INITIAL_STATE, action) {
+function wallet(state = INITIAL_STATE, action) {
   switch (action.type) {
-  case WALLET:
+  case CURRENCY:
     return {
       ...state,
       currencies: action.currencies,
-      expenses: action.expenses,
     };
   default:
     return state;
   }
 }
 
-export default walletReducer;
+export default wallet;
