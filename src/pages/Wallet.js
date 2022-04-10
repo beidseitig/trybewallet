@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import propTypes from 'prop-types';
 import Header from '../components/header';
 import { fetchAPIThunk } from '../actions';
+import Expenses from '../components/expenses';
 
 class Wallet extends React.Component {
   componentDidMount = async () => {
@@ -15,7 +16,12 @@ class Wallet extends React.Component {
   };
 
   render() {
-    return <Header />;
+    return (
+      <>
+        <Header />
+        ;
+        <Expenses />
+      </>);
   }
 }
 
