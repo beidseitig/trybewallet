@@ -79,7 +79,6 @@ class Expenses extends React.Component {
             onChange={ this.handleChange }
             data-testid="currency-input"
           >
-            <option>Escolha a moeda:</option>
             {
               currencies.map((item, index) => (
                 <option key={ index } value={ item }>{item}</option>
