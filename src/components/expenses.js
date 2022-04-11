@@ -1,17 +1,20 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import propTypes from 'prop-types';
-import { fetchAPIThunk } from '../actions';
+import { addExpense, fetchAPIThunkFiltered } from '../actions';
+import fetchAPI from '../helpers/currencyAPI';
 
 class Expenses extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: '',
-      coin: 'USD',
+      id: -1,
+      value: 0,
+      currency: 'USD',
       method: '',
-      category: '',
+      tag: '',
       description: '',
+      exchangeRates: [],
     };
   }
 
@@ -29,8 +32,29 @@ class Expenses extends React.Component {
     this.setState({ [name]: value });
   }
 
+  handleClick = async () => {
+    const { saveExpense } = this.props;
+    const getAPI = await fetchAPI();
+    console.log(getAPI);
+
+    this.setState((prevState) => ({
+      id: prevState.id + 1,
+      exchangeRates: getAPI,
+    }), () => {
+      saveExpense(this.state);
+    });
+    this.setState({
+      value: 0,
+      currency: 'USD',
+      method: '',
+      tag: '',
+      description: '',
+      exchangeRates: [],
+    });
+  };
+
   render() {
-    const { value, coin, method, category, description } = this.state;
+    const { value, currency, method, tag, description } = this.state;
     const { currencies } = this.props;
     return (
       <section>
@@ -46,16 +70,16 @@ class Expenses extends React.Component {
           />
         </label>
 
-        <label htmlFor="coin">
+        <label htmlFor="currency">
           Moeda:
           <select
-            name="coin"
-            value={ coin }
-            id="coin"
+            name="currency"
+            value={ currency }
+            id="currency"
             onChange={ this.handleChange }
             data-testid="currency-input"
-            label="Moeda"
           >
+            <option>Escolha a moeda:</option>
             {
               currencies.map((item, index) => (
                 <option key={ index } value={ item }>{item}</option>
@@ -80,12 +104,12 @@ class Expenses extends React.Component {
           </select>
         </label>
 
-        <label htmlFor="category">
+        <label htmlFor="tag">
           Categoria:
           <select
-            name="category"
-            value={ category }
-            id="category"
+            name="tag"
+            value={ tag }
+            id="tag"
             onChange={ this.handleChange }
             data-testid="tag-input"
           >
@@ -109,7 +133,12 @@ class Expenses extends React.Component {
             data-testid="description-input"
           />
         </label>
-        <button type="button">Adicionar despesa</button>
+        <button
+          type="button"
+          onClick={ this.handleClick }
+        >
+          Adicionar despesa
+        </button>
       </section>
     );
   }
@@ -120,12 +149,14 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  fetchCurrencies: () => dispatch(fetchAPIThunk()),
+  fetchCurrencies: () => dispatch(fetchAPIThunkFiltered()),
+  saveExpense: (payload) => dispatch(addExpense(payload)),
 });
 
 Expenses.propTypes = {
   currencies: propTypes.string,
   fetchCurrencies: propTypes.func,
+  saveExpense: propTypes.func,
 }.isRequired;
 
 export default connect(mapStateToProps, mapDispatchToProps)(Expenses);

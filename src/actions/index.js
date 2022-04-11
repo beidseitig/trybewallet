@@ -1,19 +1,25 @@
-import fetchAPI from '../services/currencyAPI';
+import fetchAPI from '../helpers/currencyAPI';
 
 export const LOGIN = 'LOGIN';
 export const CURRENCY = 'CURRENCY';
+export const ADD_EXPENSE = 'ADD_EXPENSE';
 
-export const actionLogin = (email) => ({
+export const actionLogin = (payload) => ({
   type: LOGIN,
-  email,
+  payload,
 });
 
-export const actionCurrency = (currencies) => ({
+export const actionCurrency = (payload) => ({
   type: CURRENCY,
-  currencies,
+  payload,
 });
 
-export const fetchAPIThunk = () => async (dispatch) => {
+export const addExpense = (payload) => ({
+  type: ADD_EXPENSE,
+  payload,
+});
+
+export const fetchAPIThunkFiltered = () => async (dispatch) => {
   const data = await fetchAPI();
   const filterData = Object.keys(data).filter((item) => item !== 'USDT');
   console.log(filterData);

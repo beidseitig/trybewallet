@@ -4,26 +4,37 @@ import propTypes from 'prop-types';
 
 class Header extends Component {
   render() {
-    const { user } = this.props;
+    const { userEmail, totalExpenses } = this.props;
     return (
       <section>
-        <h1>TrybeWallet</h1>
-        <p data-testid="email-field">{`Email: ${user.email}`}</p>
-        <p data-testid="total-field">{`Despesa Total: ${0}`}</p>
-        <p data-testid="header-currency-field">BRL</p>
+        <div>
+          <h1>TrybeWallet</h1>
+        </div>
+        <div>
+          <h3 data-testid="email-field">{`Email: ${userEmail}`}</h3>
+        </div>
+        <div>
+          <h3 data-testid="total-field">
+            { totalExpenses.reduce((prev, curr) => (
+              prev + curr.value * curr.exchangeRates[curr.currency].ask), 0).toFixed(2) }
+          </h3>
+        </div>
+        <div>
+          <h3 data-testid="header-currency-field">BRL</h3>
+        </div>
       </section>
     );
   }
 }
 
 const mapStateToProps = (state) => ({
-  user: state.user,
+  userEmail: state.user.email,
+  totalExpenses: state.wallet.expenses,
 });
 
 Header.propTypes = {
-  user: propTypes.shape({
-    email: propTypes.string,
-  }),
+  userEmail: propTypes.string,
+  totalExpenses: propTypes.array,
 }.isRequired;
 
 export default connect(mapStateToProps)(Header);
